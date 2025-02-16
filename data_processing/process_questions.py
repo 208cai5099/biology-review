@@ -43,10 +43,8 @@ for filename in answer_filenames:
             answers_list.append(answer.strip()[-1].lower())
 
 # format each question and its answer as a dictionary structure
-# {"question": question, "answer_choices": list of choices, "correct_answer" : correct choice}
+# {"unit" : unit, "question_num" : num, "question": question, "answer_choices": list of choices, "correct_answer" : correct answer}
 # store all the dictionaries inside a list
-# store the data as a JSON file
-
 questions_and_answers_list = []
 
 for i in range(len(questions_list)):
