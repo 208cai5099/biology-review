@@ -12,31 +12,26 @@ question_filenames = ["OpenStax Concepts of Biology Chapter Review Questions.txt
 for filename in question_filenames:
 
     # store the questions in a list, organized by topics
-    with open(f"/Users/zhuobiaocai/Desktop/biology-review/questions_and_answers/{filename}", "r") as question_source:
+    with open(f"/Users/zhuobiaocai/Desktop/biology-review/data_processing/{filename}", "r") as question_source:
         all_questions = "".join(question_source.readlines())
-        questions_by_topic = re.split(r"Topic: [\w\s]+\n", all_questions.strip())[1:]
-        topic_names = re.findall(r"Topic: [\w\s]+\n", all_questions.strip())
 
-    # iterate through each topic's questions and store each individual question separately
-    for topic_questions in questions_by_topic:
+        # append each question's topic to the running list
+        for topic in re.findall(r"Topic: [\w\s]+\n", all_questions.strip()):
+            topics_list.append(topic.strip().replace("Topic: ", ""))
 
-        current_topic = topic_names.pop(0).strip().replace("Topic: ", "")
-
-        question_regex = r"Multiple-Choice Question\n"
-
-        for q in re.split(question_regex, topic_questions):
-            if len(q.strip()) > 0:
-                questions_list.append(q.strip())
-                topics_list.append(current_topic)
-
+        all_questions_split = re.split(r"Topic: [\w\s]+\n", all_questions.strip())[1:]
+    
+        # iterate through each question and append it
+        for question in all_questions_split:
+            questions_list.append(question.strip())
+    
 answer_filenames = ["OpenStax Concepts of Biology Chapter Review Answers.txt"]
 
 # iterate through each file with answers and save the answers in a list in the same order 
 # as written in the file
 for filename in answer_filenames:
-    with open(f"/Users/zhuobiaocai/Desktop/biology-review/questions_and_answers/{filename}", "r") as answer_source:
+    with open(f"/Users/zhuobiaocai/Desktop/biology-review/data_processing/{filename}", "r") as answer_source:
         all_answers = "".join(answer_source.readlines())
-        answers_by_topic = re.split(r"Topic: [\w\s]+\n", all_answers.strip())[1:]
 
         answer_num_regex = r"[\d]+\. [ABCD]{1}[\n]*"
         for answer in re.findall(answer_num_regex, all_answers):
@@ -47,15 +42,23 @@ for filename in answer_filenames:
 # store all the dictionaries inside a list
 questions_and_answers_list = []
 
+# keep track of the number of questions for each topic
+# use this to assign a number to each question
+question_num_by_topic = {}
+for topic in set(topics_list):
+    formatted_topic = "_".join(topic.lower().split(" "))
+    question_num_by_topic[formatted_topic] = 1
+
 for i in range(len(questions_list)):
     question = questions_list[i]
     answer = answers_list[i]
-    topic = topics_list[i].lower()
+    topic = "_".join(topics_list[i].lower().split(" "))
 
-    # extract only the question
+    # use regex to where answer choice a begins and use indexing to extract just the question
     choice_a_matcher = re.search(r"a\. [\s\w\-,:;’]+[\.]*\n", question)
     question_only = question[ : choice_a_matcher.start() ].strip()
 
+    # use regex to extract the question's number and remove the question number from the question
     question_num_matcher = re.search(r"[\d]+\. ", question_only)
     question_num = int(question_only[ : question_num_matcher.end()].strip().strip("."))
     question_only = question_only[ question_num_matcher.end() : ]
@@ -72,12 +75,15 @@ for i in range(len(questions_list)):
 
     questions_and_answers_list.append({
         "topic" : topic,
-        "question_num" : question_num,
+        "question_num" : question_num_by_topic[topic],
         "question" : question_only,
         "answer_choices" : answer_choices,
         "correct_answer" : correct_answer,
     })
 
-output_filename = "/Users/zhuobiaocai/Desktop/biology-review/questions_and_answers/processed_questions.json"
+    # increment the question number for the topic that just got appended
+    question_num_by_topic[topic] += 1
+
+output_filename = "/Users/zhuobiaocai/Desktop/biology-review/processed_questions.json"
 with open(output_filename, "w") as file:
     json.dump(questions_and_answers_list, file)
