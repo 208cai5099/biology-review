@@ -3,14 +3,16 @@ import streamlit as st
 from streamlit_helper import *
 
 if "chat_log" not in st.session_state.keys():
+
+    content = '''
+    Interested in reviewing biology? 
+
+    To get started, go to the sidebar to select a topic and specify the number of practice questions. 
+    Use the chat feature to answer the questions. Once you've finished a question, click Next to move onto the next question.
+    '''
     st.session_state["chat_log"] = [{
         "role" : "assistant",
-        "content" : '''
-        Interested in reviewing biology? 
-
-        To get started, go to the sidebar to select a topic and specify the number of practice questions. 
-        Use the chat feature to answer the questions. Once you've finished a question, click Next to move onto the next question.
-        ''',
+        "content" : content,
         "avatar" : "🧬"
     }]
 
@@ -57,12 +59,33 @@ for message in st.session_state["chat_log"]:
     avatar = message["avatar"]
     with st.chat_message(name=role, avatar=avatar):
         st.text(content)
-
+    
 # create a message box to type in user response
 user_input = st.chat_input(placeholder=st.session_state["user_input_placeholder"], max_chars=200)
 
-# add the user's response to the chat log
 if user_input is not None:
-    st.session_state["chat_log"].append({"role" : "user", "content" : user_input, "avatar" : "💭"})
+
+    llm_response = None
+
+    # append the user's response to the chat log
     with st.chat_message(name="user", avatar="💭"):
         st.text(user_input)
+
+        st.session_state["chat_log"].append({
+            "role" : "user",
+            "content" : f"{user_input}",
+            "avatar" : "💭"
+        }
+        )
+
+    # stream the LLM's response to the user's response
+    with st.chat_message(name="assistant", avatar="🧬"):
+        piece = send_chat_to_llm(st.session_state)
+        llm_response = st.write_stream(piece)
+
+        # append the LLM's response to the chat log
+        st.session_state["chat_log"].append({
+            "role" : "assistant",
+            "content" : f"{llm_response}",
+            "avatar" : "🧬"
+        })

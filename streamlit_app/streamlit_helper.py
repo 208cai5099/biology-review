@@ -1,4 +1,9 @@
 import random
+import replicate
+import os
+
+with open("/Users/zhuobiaocai/Desktop/biology-review/replicate_token.txt", "r") as file:
+    os.environ["REPLICATE_API_TOKEN"] = file.readline().strip()
 
 """
 Retrieve the number of available questions for the specified topic
@@ -69,3 +74,56 @@ def get_questions_by_topic(firestore_db, topic, num_of_questions, session_state)
     
     session_state["question_list"] = questions
     get_next_question(session_state)
+
+'''
+Takes a chat log and formats it as a linear chat history for the LLM to process and generate a response
+'''
+def format_prompt(chat_log):
+
+    prompt = '''You are a computer assistant for tutoring BIOLOGY. A student is responding to a biology question from you. Read through the following messages between you two. Explain the correct answer BRIEFLY. If a student ask questions, answer them with your understanding of biology.'''
+
+    for message in chat_log:
+
+        role = message["role"]
+        content = message["content"]
+
+        if role == "assistant":
+            prompt += "\n\nAssistant:\n"
+        
+        elif role == "user":
+            prompt += "\nStudent:\n"
+
+        prompt += f'"{content}"'
+        prompt += "\n"
+
+    return prompt
+
+"""
+Sends the chat log to the LLM and receive a response
+Append the chat log with the response
+"""
+def send_chat_to_llm(session_state):
+
+    chat_log = session_state["chat_log"]
+
+    prompt = format_prompt(chat_log)
+
+    system_prompt = '''You are a high school biology tutor. 
+    You just gave a question to a student. Even if the student answers correctly, explain the answer.
+    IMPORTANT: Respond using fewer than 50 words.
+    IMPORTANT: Your explanation must demonstrate understanding of biological concepts.
+    IMPORTANT: DO NOT give a new question.
+    '''
+
+    max_output_tokens = 250
+
+    llm_input = {
+        "prompt" : prompt,
+        "system_prompt" : system_prompt,
+        "max_tokens" : max_output_tokens
+    }
+
+    model_name = "meta/meta-llama-3-70b-instruct"
+
+    for piece in replicate.stream(model_name, input=llm_input):
+        yield str(piece)
