@@ -1,4 +1,7 @@
-firebase_backend/firebase_key.json
-questions_and_answers/OpenStax Concepts of Biology Chapter Review Answers.txt
-questions_and_answers/OpenStax Concepts of Biology Chapter Review Questions.txt
-firebase_backend/__pycache__
+firebase_key.json
+.ipynb_checkpoints
+testing_llama.ipynb
+llama_answers_and_explanations.json
+processed_questions.json
+data_processing/OpenStax Concepts of Biology Chapter Review Questions.txt
+data_processing/OpenStax Concepts of Biology Chapter Review Answers.txt
