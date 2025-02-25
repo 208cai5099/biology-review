@@ -5,3 +5,4 @@ llama_answers_and_explanations.json
 processed_questions.json
 data_processing/OpenStax Concepts of Biology Chapter Review Questions.txt
 data_processing/OpenStax Concepts of Biology Chapter Review Answers.txt
+streamlit_app/__pycache__
