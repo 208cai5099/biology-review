@@ -49,20 +49,19 @@ if "chat_input_disabled" not in st.session_state.keys():
 title, next_question = st.columns(spec=[0.7, 0.3], vertical_alignment="bottom")
 
 with title:
-    st.title("BioChat Review Tool")
+    st.title("Biology Chatbot Review")
 
 # button for requesting next question
 with next_question:
     st.button(label="Next Question", disabled=st.session_state["next_question_disabled"], on_click=get_next_question, kwargs={"session_state" : st.session_state}, use_container_width=True)
 
-# caption to indicate chatbot was made using Meta's Llama LLM
-st.caption("Built with Llama")
-
 # sidebar contains instructions and input widgets to request questions from Firestore
 with st.sidebar:
 
     instructions = st.markdown('''
-    **Instructions**: Select a topic and specify the number of questions.
+    **Instructions**: 
+    
+    Select a topic and specify the number of questions.
     ''')
 
     topic_selection = st.selectbox(
@@ -77,10 +76,12 @@ with st.sidebar:
                               kwargs={"firestore_db" : firestore_db, "topic" : topic_selection, "num_of_questions" : question_count_selection, "session_state" : st.session_state})
 
     llama_note = st.markdown('''
-    Meta's Llama 3.1 model is used to generate the questions. Some questions were edited to ensure accuracy.
-    The Llama 3.1 model is also used for the chatbot feature. 
-    Llama 3.1 is licensed under the Llama 3.1 Community License, Copyright © Meta Platforms, Inc. All Rights Reserved.
+    \n
+    Built with Meta Llama 3
+    \n
+    The questions in this app were generated using the Llama 3 model from Meta. The chatbot responses in this app are generated using the same model. See [GitHub](https://github.com/208cai5099/biology-review) repo for details.
     ''')
+
 
 # print out the messages from the chat log
 for message in st.session_state["chat_log"]:
