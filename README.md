@@ -18,12 +18,11 @@ In case you do not know, a language model is a model or program that predicts te
 
 The LLM used for the chatbot in this application is Meta's open-source [Llama 3 70b instruct model](https://replicate.com/meta/meta-llama-3-70b-instruct). Due to the large computations, Replicate is used to run the model. The messages from the chat are sent to Replicate. Replicate then runs the model to produce a response based on the chat history. The response is sent back to the application for display.
 
+Please keep in mind that LLMs can make mistakes. It is possible for the model to generate a message with incorrect information about a biological concept or topic. If you suspect there is a mistake, please use a resource to verify it.
+
 ## Where do the Review Questions Come From?
 
 The review questions were generated in advance using Meta's Llama 3 70b instruct model. Prompts were given to the model to generate multiple-choice questions about particular biology concepts. Because LLMs can make mistakes, the questions were edited as needed to ensure accuracy and correctness. All the questions are stored inside a Firebase project.
-
-## Disclaimer
-Please keep in mind that LLMs can make mistakes. It is possible for the model to generate a message with incorrect information about a biological concept or topic. If you suspect there is a mistake, please use a resource to verify it.
 
 ## Additional Information
 
