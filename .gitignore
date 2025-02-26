@@ -1,13 +1,9 @@
+testing_llama
 firebase_key.json
-.ipynb_checkpoints
-testing_llama.ipynb
-llama_answers_and_explanations.json
-processed_questions.json
-data_processing/OpenStax Concepts of Biology Chapter Review Questions.txt
-data_processing/OpenStax Concepts of Biology Chapter Review Answers.txt
-streamlit/__pycache__
 replicate_token.txt
 store_api_keys.py
 streamlit/.streamlit
 streamlit/.streamlit/secrets.toml
-firebase_add_questions.py
+streamlit/__pycache__
+question_generation/processed_questions.json
+question_generation/original_generated_questions.txt

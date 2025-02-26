@@ -73,7 +73,11 @@ def get_questions_by_topic(firestore_db, topic, num_of_questions, session_state)
     
     session_state["question_list"] = questions
     get_next_question(session_state)
-    session_state["next_question_disabled"] = False
+
+    # control the functionality of the next question button
+    if len(session_state["question_list"]) > 0:
+        session_state["next_question_disabled"] = False
+
     session_state["chat_input_disabled"] = False
 
 '''

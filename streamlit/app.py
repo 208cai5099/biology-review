@@ -43,7 +43,7 @@ if "next_question_disabled" not in st.session_state.keys():
     st.session_state["next_question_disabled"] = True 
 
 if "chat_input_disabled" not in st.session_state.keys():
-    st.session_state["chat_input_disabled"] = True 
+    st.session_state["chat_input_disabled"] = True
 
 # format the title and next question button
 title, next_question = st.columns(spec=[0.7, 0.3], vertical_alignment="bottom")
@@ -67,22 +67,19 @@ with st.sidebar:
 
     topic_selection = st.selectbox(
         "Select a topic:",
-        ("Biochemistry", "Cells", "Genetics", "Evolution", "Human Body Systems", "Reproduction", "Ecology")
+        ("Biochemistry", "Cells", "Genetics", "Evolution", "Human Physiology", "Reproduction and Development", "Ecology")
     )
 
-    question_count_selection = st.slider(label="Select number of questions:", min_value=1, max_value=10, 
-                                         value=2, step=1)
+    question_count_selection = st.slider(label="Select number of questions:", min_value=1, max_value=5, 
+                                         value=1, step=1)
     
     submit_status = st.button(label="Start", help="Click to get questions", on_click=get_questions_by_topic,
                               kwargs={"firestore_db" : firestore_db, "topic" : topic_selection, "num_of_questions" : question_count_selection, "session_state" : st.session_state})
 
-    openstax_attribution = st.markdown('''
-    The biology questions in this app are from OpenStax's *Concepts of Biology* (Creative Commons Attribution License v4.0).
-    Some questions were modified, but the majority of the questions remained the same.
-    ''')
-
     llama_note = st.markdown('''
-    This app uses Meta's Llama 3.1 model for the chatbot feature. Llama 3.1 is licensed under the Llama 3.1 Community License, Copyright © Meta Platforms, Inc. All Rights Reserved.
+    Meta's Llama 3.1 model is used to generate the questions. Some questions were edited to ensure accuracy.
+    The Llama 3.1 model is also used for the chatbot feature. 
+    Llama 3.1 is licensed under the Llama 3.1 Community License, Copyright © Meta Platforms, Inc. All Rights Reserved.
     ''')
 
 # print out the messages from the chat log
