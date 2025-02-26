@@ -78,10 +78,11 @@ with st.sidebar:
     llama_note = st.markdown('''
     \n
     Built with Meta Llama 3
-    \n
-    The questions in this app were generated using the Llama 3 model from Meta. The chatbot responses in this app are generated using the same model. See [GitHub](https://github.com/208cai5099/biology-review) repo for details.
-    ''')
 
+    The questions in this app were generated using the Llama 3 model from Meta. The chatbot responses in this app are generated using the same model. See [GitHub](https://github.com/208cai5099/biology-review) repo for details.
+    
+    Please keep in mind that the model can make mistakes. It is possible for the chatbot to display incorrect information about a biological concept or topic.
+    ''')
 
 # print out the messages from the chat log
 for message in st.session_state["chat_log"]:
