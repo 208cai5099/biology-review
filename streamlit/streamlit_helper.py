@@ -1,9 +1,4 @@
 import random
-import replicate
-import os
-
-with open("/Users/zhuobiaocai/Desktop/biology-review/replicate_token.txt", "r") as file:
-    os.environ["REPLICATE_API_TOKEN"] = file.readline().strip()
 
 """
 Retrieve the number of available questions for the specified topic
@@ -27,13 +22,14 @@ def format_question_for_chat(question_dict):
     question = question_dict["question"]
     answer_choices = question_dict["answer_choices"]
     
-    return f"Here is the question:\n{question}\n{"\n".join(answer_choices)}"
+    return f"Here is the question:\n{question}\n{"\n".join(answer_choices)}\nWhat is the answer?"
 
 """
 Select a question from the list of retrieved questions to ask the user
 Clear the chat log and let the selected question be the initial entry
 """
 def get_next_question(session_state):
+    
     session_state["current_question"] = session_state["question_list"].pop()
 
     reformatted_question = format_question_for_chat(session_state["current_question"])
@@ -44,6 +40,9 @@ def get_next_question(session_state):
         "avatar" : "🧬"
     }
     ]
+
+    if len(session_state["question_list"]) == 0:
+        session_state["next_question_disabled"] = True
 
 """
 Retrieves a list of random questions from a specific topic
@@ -74,6 +73,8 @@ def get_questions_by_topic(firestore_db, topic, num_of_questions, session_state)
     
     session_state["question_list"] = questions
     get_next_question(session_state)
+    session_state["next_question_disabled"] = False
+    session_state["chat_input_disabled"] = False
 
 '''
 Takes a chat log and formats it as a linear chat history for the LLM to process and generate a response
@@ -93,7 +94,7 @@ def format_prompt(chat_log):
         elif role == "user":
             prompt += "\nStudent:\n"
 
-        prompt += f'"{content}"'
+        prompt += f"{content}"
         prompt += "\n"
 
     return prompt
@@ -102,20 +103,22 @@ def format_prompt(chat_log):
 Sends the chat log to the LLM and receive a response
 Append the chat log with the response
 """
-def send_chat_to_llm(session_state):
+def send_chat_to_llm(session_state, replicate_connection):
 
     chat_log = session_state["chat_log"]
 
     prompt = format_prompt(chat_log)
+    correct_answer = session_state["current_question"]["correct_answer"]
 
-    system_prompt = '''You are a high school biology tutor. 
+    system_prompt = f'''You are a high school biology tutor. 
     You just gave a question to a student. Even if the student answers correctly, explain the answer.
-    IMPORTANT: Respond using fewer than 50 words.
+    IMPORTANT: The correct answer is {correct_answer}.
+    IMPORTANT: Respond as BRIEFLY as possible.
     IMPORTANT: Your explanation must demonstrate understanding of biological concepts.
-    IMPORTANT: DO NOT give a new question.
+    IMPORTANT: DO NOT give a new question. If the student asks for a new question, tell them to use the app's sidebar to get new questions.
     '''
 
-    max_output_tokens = 250
+    max_output_tokens = 150
 
     llm_input = {
         "prompt" : prompt,
@@ -125,5 +128,5 @@ def send_chat_to_llm(session_state):
 
     model_name = "meta/meta-llama-3-70b-instruct"
 
-    for piece in replicate.stream(model_name, input=llm_input):
+    for piece in replicate_connection.stream(model_name, input=llm_input):
         yield str(piece)
