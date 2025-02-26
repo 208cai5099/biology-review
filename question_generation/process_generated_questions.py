@@ -12,7 +12,7 @@ question_filenames = ["original_generated_questions.txt"]
 for filename in question_filenames:
 
     # store the questions in a list, organized by topics
-    with open(f"/Users/zhuobiaocai/Desktop/biology-review/question_generation/{filename}", "r") as question_source:
+    with open(f"question_generation/{filename}", "r") as question_source:
         all_questions = "".join(question_source.readlines())
 
         # append each question's topic to the list
@@ -113,6 +113,6 @@ for i in range(len(questions_list)):
     question_num_by_major_topic[major_topic] += 1
 
 
-output_filename = "/Users/zhuobiaocai/Desktop/biology-review/question_generation/processed_questions.json"
+output_filename = "question_generation/processed_questions.json"
 with open(output_filename, "w") as file:
     json.dump(questions_and_answers_list, file)
