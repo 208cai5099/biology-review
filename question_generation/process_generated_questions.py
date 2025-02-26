@@ -12,22 +12,23 @@ question_filenames = ["original_generated_questions.txt"]
 for filename in question_filenames:
 
     # store the questions in a list, organized by topics
-    with open(f"question_generation/{filename}", "r") as question_source:
+    with open(f"{filename}", "r") as question_source:
         all_questions = "".join(question_source.readlines())
 
         # append each question's topic to the list
-        for topic in re.findall(r"Topic: [\w\s]+\n", all_questions.strip()):
+        for topic in re.findall(r"Topic: [\w\s-]+\n", all_questions.strip()):
             topics_list.append(topic.strip().replace("Topic: ", ""))
         
         # append each question's answer to the list
-        for answer in re.findall(r"Correct Answer: [abcd]{1}\n", all_questions.strip()):
+        for answer in re.findall(r"Correct Answer: [abcd]{1}", all_questions.strip()):
             answers_list.append(answer.strip().replace("Correct Answer: ", ""))
 
-        all_questions_split = re.split(r"Topic: [\w\s]+\n", all_questions.strip())[1:]
+        all_questions_split = re.split(r"Topic: [\w\s-]+\n", all_questions.strip())[1:]
     
         # iterate through each question and append it
         for question in all_questions_split:
             questions_list.append(question.strip())
+    
 
 # map each sub-topic to a major topic
 cells = ["Ribosome", "Nucleus", "Cell Membrane", "Mitochondria", "Chloroplast", "Cell Wall", "Lysosome", "Rough Endoplasmic Reticulum",
@@ -112,7 +113,6 @@ for i in range(len(questions_list)):
     # increment the question number for the topic that just got appended
     question_num_by_major_topic[major_topic] += 1
 
-
-output_filename = "question_generation/processed_questions.json"
+output_filename = "processed_questions.json"
 with open(output_filename, "w") as file:
     json.dump(questions_and_answers_list, file)
