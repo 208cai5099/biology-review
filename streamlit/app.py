@@ -22,7 +22,7 @@ firestore_db = firestore.client()
 if "chat_log" not in st.session_state.keys():
 
     content = '''
-    Hi there, I'm a chatbot that can help you review biology topics. Go to the sidebar to get started.
+    Hi there, I'm a chatbot that can help you review biology topics. Go to the sidebar to get started. On mobile, press the top-left arrow to access the sidebar.
     '''
     st.session_state["chat_log"] = [{
         "role" : "assistant",
