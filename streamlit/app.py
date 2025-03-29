@@ -79,7 +79,7 @@ with st.sidebar:
     \n
     Built with Meta Llama 3
 
-    The questions in this app were generated using the Llama 3 model from Meta. The chatbot responses in this app are generated using the same model. See [GitHub](https://github.com/208cai5099/biology-review) repo for details.
+    The questions in this app were generated using Meta's Llama 3 model. The chatbot responses in this app are generated using the same model. The questions were checked in advance for correctness. See [GitHub](https://github.com/208cai5099/biology-review) repository for details.
     
     Please keep in mind that the model can make mistakes. It is possible for the chatbot to display incorrect information about a biological concept or topic.
     ''')

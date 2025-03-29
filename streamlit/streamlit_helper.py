@@ -55,7 +55,9 @@ def get_questions_by_topic(firestore_db, topic, num_of_questions, session_state)
     question_count = get_question_count(firestore_db, reformatted_topic)
 
     # randomly generate question numbers for querying
-    question_numbers = random.sample(population=[i for i in range(1, question_count + 1)], k=num_of_questions)
+    number_list = [i for i in range(1, question_count + 1)]
+    random.shuffle(number_list)
+    question_numbers = number_list[ : num_of_questions]
 
     questions = []
 
@@ -114,12 +116,13 @@ def send_chat_to_llm(session_state, replicate_connection):
     prompt = format_prompt(chat_log)
     correct_answer = session_state["current_question"]["correct_answer"]
 
-    system_prompt = f'''You are a high school biology tutor. 
+    system_prompt = f'''You are a high school biology teacher. 
     You just gave a question to a student. Even if the student answers correctly, explain the answer.
     IMPORTANT: The correct answer is {correct_answer}.
     IMPORTANT: Respond as BRIEFLY as possible.
     IMPORTANT: Your explanation must demonstrate understanding of biological concepts.
     IMPORTANT: DO NOT give a new question. If the student asks for a new question, tell them to use the app's sidebar to get new questions.
+    IMPORTANT: If the student asks about topics that are unrelated to the question, tell them to ask about the current question or get a new question from the app's sidebar.
     '''
 
     max_output_tokens = 150
