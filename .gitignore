@@ -9,4 +9,6 @@ question_generation/.ipynb_checkpoints
 question_generation/processed_questions.json
 question_generation/generated_questions_2_25_2025.txt
 question_generation/generated_questions_3_28_2025.txt
+question_generation/generated_questions_4_2_2025.txt
+question_generation/generated_questions_4_2_2025_b.txt
 .DS_Store
