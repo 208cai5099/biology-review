@@ -12,6 +12,10 @@ def get_question_count(firestore_db, topic):
 
     document_dict = firestore_db.collection("question_counts").document(topic).get().to_dict()
 
+    # if there is no count for this topic or the question_counts collectin is non-existent, return 0
+    if document_dict is None:
+        return 0
+
     return document_dict["count"]
 
 """

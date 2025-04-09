@@ -6,7 +6,7 @@ questions_list = []
 answers_list = []
 topics_list = []
 
-question_filenames = ["generated_questions_4_2_2025_b.txt"]
+question_filenames = ["t1.txt", "t2.txt"]
 
 # iterate through each file with questions
 for filename in question_filenames:
@@ -28,8 +28,7 @@ for filename in question_filenames:
         # iterate through each question and append it
         for question in all_questions_split:
             questions_list.append(question.strip())
-            
-    
+
 # format each question and its answer as a dictionary structure
 # {"topic" : topic, "question": question, "answer_choices": list of choices, "correct_answer" : correct answer}
 # store all the dictionaries inside a list
