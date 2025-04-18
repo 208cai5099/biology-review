@@ -6,7 +6,7 @@ questions_list = []
 answers_list = []
 topics_list = []
 
-question_filenames = ["t1.txt", "t2.txt"]
+question_filenames = ["test.txt"]
 
 # iterate through each file with questions
 for filename in question_filenames:
